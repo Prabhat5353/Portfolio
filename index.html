@@ -1,490 +1,1362 @@
+
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prabhat Kurmi | Portfolio</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Alpine.js CDN (For simple interactive states) -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- AOS CSS for Massive Scroll Animations -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Prabhat Kurmi | 4ROPEX | Cybernetic Glass Portfolio</title>
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    },
+                    colors: {
+                        theme: {
+                            bg: 'var(--color-bg)',
+                            card: 'var(--color-card)',
+                            primary: 'var(--color-primary)',
+                            secondary: 'var(--color-secondary)',
+                            accent: 'var(--color-accent)',
+                            highlight: 'var(--color-highlight)'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 8s ease-in-out infinite',
+                        'glow': 'glow 3s ease-in-out infinite alternate',
+                        'spin-slow': 'spin 20s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-15px) rotate(2deg)' }
+                        },
+                        glow: {
+                            '0%': { opacity: '0.4' },
+                            '100%': { opacity: '0.8' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Vanilla Tilt for interactive 3D cards -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
     <style>
-        /* Custom Glassmorphism Utility styles */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.05);
+        /* CSS Variables for Themes */
+        :root {
+            /* Theme 1: Blue & Mint (Default) */
+            --color-bg: #030d1a;
+            --color-card-rgb: 10, 25, 47;
+            --color-primary: #00e5ff;       /* Vibrant Electric Blue */
+            --color-secondary: #00f5a0;     /* Fresh Mint */
+            --color-accent: #38bdf8;        /* Sky Blue */
+            --color-glow-1: rgba(0, 229, 255, 0.22);
+            --color-glow-2: rgba(0, 245, 160, 0.18);
+            --border-glass: rgba(0, 245, 160, 0.18);
+            --border-hover: rgba(0, 229, 255, 0.5);
+            --text-primary: #00e5ff;
+            --text-secondary: #00f5a0;
+        }
+
+        /* Theme 2: Dark Grey & Yellow-Green (Stealth Cyber Lime) */
+        [data-theme="dark-grey-lime"] {
+            --color-bg: #0f1115;
+            --color-card-rgb: 24, 27, 34;
+            --color-primary: #a3e635;       /* Sharp Lime / Yellow-Green */
+            --color-secondary: #bef264;     /* Light Yellow-Green Glow */
+            --color-accent: #84cc16;        /* Deep Lime */
+            --color-glow-1: rgba(163, 230, 53, 0.22);
+            --color-glow-2: rgba(190, 242, 100, 0.15);
+            --border-glass: rgba(163, 230, 53, 0.18);
+            --border-hover: rgba(163, 230, 53, 0.55);
+            --text-primary: #a3e635;
+            --text-secondary: #bef264;
+        }
+
+        /* Modern Glassmorphic Foundations */
+        .glass-base {
+            background: rgba(var(--color-card-rgb), 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            transition: background 0.5s ease, border-color 0.5s ease;
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(var(--color-card-rgb), 0.8) 0%, rgba(var(--color-card-rgb), 0.4) 100%);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 10px 35px 0 rgba(0, 0, 0, 0.45);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .glass-nav {
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        .glass-card-hover:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 16px 40px -10px var(--color-glow-1), inset 0 0 20px rgba(255, 255, 255, 0.04);
+            transform: translateY(-4px);
+        }
+
+        .glass-pill {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-glass);
+        }
+
+        /* Dynamic Theme Text & Shimmers */
+        .theme-text-primary {
+            color: var(--text-primary);
+        }
+        .theme-text-secondary {
+            color: var(--text-secondary);
+        }
+        .theme-border-primary {
+            border-color: var(--text-primary);
+        }
+        .theme-border-secondary {
+            border-color: var(--text-secondary);
+        }
+
+        .shimmer-text {
+            background: linear-gradient(90deg, #ffffff 0%, var(--color-primary) 35%, var(--color-secondary) 70%, #ffffff 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            animation: shine 6s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        /* Button Gradient Fill */
+        .theme-btn-gradient {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: #030712;
+            transition: all 0.3s ease;
+        }
+        .theme-btn-gradient:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 0 25px var(--color-glow-1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--color-bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+            border: 2px solid var(--color-bg);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary);
+        }
+
+        /* Hide horizontal scrollbar while keeping scroll feature */
+        .hide-scroll-bar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scroll-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Noise texture layer */
+        .bg-noise {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 0);
+            background-size: 24px 24px;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-950 via-slate-900 to-blue-950 text-slate-100 min-h-screen relative overflow-x-hidden selection:bg-cyan-500 selection:text-slate-900">
 
-    <!-- Dynamic Animated Background Blobs -->
-    <div class="absolute top-20 left-10 w-72 h-72 bg-purple-600 rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse pointer-events-none"></div>
-    <div class="absolute bottom-40 right-10 w-96 h-96 bg-cyan-600 rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse pointer-events-none [animation-duration:5s]"></div>
-    <div class="absolute top-1/2 left-1/3 w-80 h-80 bg-blue-600 rounded-full mix-blend-screen filter blur-3xl opacity-15 animate-pulse pointer-events-none [animation-duration:7s]"></div>
+<body style="background-color: var(--color-bg);" class="text-slate-100 font-sans min-h-screen relative overflow-x-hidden selection:bg-emerald-400 selection:text-slate-950 transition-colors duration-500">
 
-    <!-- Sticky Glass Navbar -->
-    <header x-data="{ mobileMenuOpen: false }" class="sticky top-0 z-50 glass-nav px-6 py-4">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <span class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent tracking-wide">
-                PK.DEV
-            </span>
+    <!-- Interactive Ambient Glow Layers -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div id="cursor-glow" class="absolute w-[500px] h-[500px] rounded-full blur-[130px] transition-transform duration-300 -translate-x-1/2 -translate-y-1/2 will-change-transform" style="background: radial-gradient(circle, var(--color-glow-1) 0%, var(--color-glow-2) 70%, transparent 100%);"></div>
+        <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full filter blur-[110px] animate-pulse-slow" style="background-color: var(--color-glow-2);"></div>
+        <div class="absolute top-1/3 -right-32 w-[32rem] h-[32rem] rounded-full filter blur-[130px] animate-float" style="background-color: var(--color-glow-1);"></div>
+        <div class="absolute bottom-10 left-1/4 w-80 h-80 rounded-full filter blur-[100px] animate-pulse-slow" style="background-color: var(--color-glow-2);"></div>
+        <div class="absolute inset-0 bg-noise opacity-40"></div>
+    </div>
+
+    <!-- Live Device Orientation & Mode Badge Indicator -->
+    <div class="fixed bottom-5 right-5 z-50">
+        <div class="glass-base px-3 py-1.5 rounded-full flex items-center gap-2.5 text-[11px] font-mono text-slate-400 shadow-2xl">
+            <span class="w-2 h-2 rounded-full animate-ping" style="background-color: var(--color-secondary);"></span>
+            <span id="screen-detector">Detecting Layout...</span>
+            <span class="text-slate-600">|</span>
+            <span class="theme-text-primary font-bold tracking-wider">4ROPEX.CORE</span>
+        </div>
+    </div>
+
+    <!-- Top Sticky Glass Navigation -->
+    <header class="sticky top-0 z-40 w-full glass-base border-b transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <!-- Desktop Navigation -->
-            <nav class="hidden md:flex gap-8 text-sm font-medium text-slate-300">
-                <a href="#about" class="hover:text-cyan-400 transition-colors">About</a>
-                <a href="#education" class="hover:text-cyan-400 transition-colors">Education</a>
-                <a href="#skills" class="hover:text-cyan-400 transition-colors">Skills</a>
-                <a href="#projects" class="hover:text-cyan-400 transition-colors">Projects</a>
-                <a href="#certifications" class="hover:text-cyan-400 transition-colors">Certifications</a>
-                <a href="#contact" class="hover:text-cyan-400 transition-colors">Contact</a>
+            <!-- Brand Logo & Codename -->
+            <a href="#about" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-xl glass-card flex items-center justify-center font-mono font-bold theme-text-primary group-hover:scale-105 transition-all shadow-[0_0_15px_var(--color-glow-1)]">
+                    4R
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-extrabold tracking-tight text-white group-hover:theme-text-primary transition-colors">Prabhat Kurmi</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-mono border theme-text-secondary theme-border-secondary bg-white/5">v2.5</span>
+                    </div>
+                    <div class="text-[11px] font-mono text-slate-400 tracking-wider">CODENAME: <span class="theme-text-secondary font-semibold">4ROPEX</span></div>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Items -->
+            <nav class="hidden lg:flex items-center gap-1 glass-pill p-1.5 rounded-full">
+                <a href="#about" class="px-3.5 py-1.5 text-xs font-semibold rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all">About</a>
+                <a href="#featured-projects" class="px-3.5 py-1.5 text-xs font-semibold rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all">Projects</a>
+                <a href="#showcase-horizontal" class="px-3.5 py-1.5 text-xs font-semibold rounded-full theme-text-primary hover:bg-white/10 transition-all flex items-center gap-1.5">
+                    <span>Gallery</span>
+                    <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+                </a>
+                <a href="#skills" class="px-3.5 py-1.5 text-xs font-semibold rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all">Skills</a>
+                <a href="#education" class="px-3.5 py-1.5 text-xs font-semibold rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all">Education</a>
+                <a href="#certifications" class="px-3.5 py-1.5 text-xs font-semibold rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all">Certs</a>
+                <a href="#contact" class="px-3.5 py-1.5 text-xs font-semibold rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all">Contact</a>
             </nav>
 
-            <!-- Mobile Menu Button -->
-            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-slate-300 hover:text-white focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
-            </button>
+            <!-- Theme Switcher & Actions -->
+            <div class="flex items-center gap-3">
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" aria-label="Toggle Theme" class="glass-pill px-3 py-1.5 rounded-xl flex items-center gap-2 text-xs font-mono text-slate-200 hover:text-white hover:border-white/30 transition-all">
+                    <span class="w-3 h-3 rounded-full border border-white/30" id="theme-color-preview" style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));"></span>
+                    <span id="theme-label" class="hidden sm:inline">Blue & Mint</span>
+                    <i data-lucide="palette" class="w-3.5 h-3.5"></i>
+                </button>
+
+                <a href="#contact" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold theme-btn-gradient transition-all hover:scale-105 active:scale-95">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                    <span>Connect Now</span>
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-toggle" aria-label="Toggle Navigation Menu" class="lg:hidden p-2.5 rounded-xl glass-card text-slate-300 hover:text-white focus:outline-none">
+                    <i data-lucide="menu" id="toggle-icon-menu" class="w-5 h-5"></i>
+                    <i data-lucide="x" id="toggle-icon-close" class="w-5 h-5 hidden"></i>
+                </button>
+            </div>
         </div>
 
-        <!-- Mobile Navigation Menu -->
-        <div x-show="mobileMenuOpen" x-collapse class="md:hidden mt-4 glass-panel rounded-xl p-4 space-y-3 flex flex-col text-slate-300">
-            <a href="#about" @click="mobileMenuOpen = false" class="hover:text-cyan-400 py-1">About</a>
-            <a href="#education" @click="mobileMenuOpen = false" class="hover:text-cyan-400 py-1">Education</a>
-            <a href="#skills" @click="mobileMenuOpen = false" class="hover:text-cyan-400 py-1">Skills</a>
-            <a href="#projects" @click="mobileMenuOpen = false" class="hover:text-cyan-400 py-1">Projects</a>
-            <a href="#certifications" @click="mobileMenuOpen = false" class="hover:text-cyan-400 py-1">Certifications</a>
-            <a href="#contact" @click="mobileMenuOpen = false" class="hover:text-cyan-400 py-1">Contact</a>
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden glass-base border-t px-6 py-6 transition-all duration-300">
+            <div class="flex flex-col gap-3 font-medium text-slate-200">
+                <div class="pb-3 border-b border-white/10 flex justify-between items-center">
+                    <span class="text-xs font-mono text-slate-400">SELECT THEME:</span>
+                    <button id="mobile-theme-toggle" class="px-3 py-1 rounded-lg text-xs font-mono glass-card flex items-center gap-2">
+                        <span id="mobile-theme-label">Blue & Mint</span>
+                        <i data-lucide="palette" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+                <a href="#about" class="mobile-nav-link py-2 px-3 rounded-lg hover:bg-white/5 flex items-center justify-between">
+                    <span>About Me</span><i data-lucide="user" class="w-4 h-4"></i>
+                </a>
+                <a href="#featured-projects" class="mobile-nav-link py-2 px-3 rounded-lg hover:bg-white/5 flex items-center justify-between">
+                    <span>Vertical Project Grid</span><i data-lucide="layout-grid" class="w-4 h-4"></i>
+                </a>
+                <a href="#showcase-horizontal" class="mobile-nav-link py-2 px-3 rounded-lg hover:bg-white/5 flex items-center justify-between theme-text-primary">
+                    <span>Horizontal Showcase</span><i data-lucide="move-right" class="w-4 h-4"></i>
+                </a>
+                <a href="#skills" class="mobile-nav-link py-2 px-3 rounded-lg hover:bg-white/5 flex items-center justify-between">
+                    <span>Tech Stack</span><i data-lucide="code" class="w-4 h-4"></i>
+                </a>
+                <a href="#education" class="mobile-nav-link py-2 px-3 rounded-lg hover:bg-white/5 flex items-center justify-between">
+                    <span>Academic Timeline</span><i data-lucide="graduation-cap" class="w-4 h-4"></i>
+                </a>
+                <a href="#certifications" class="mobile-nav-link py-2 px-3 rounded-lg hover:bg-white/5 flex items-center justify-between">
+                    <span>Certifications</span><i data-lucide="award" class="w-4 h-4"></i>
+                </a>
+                <a href="#contact" class="mobile-nav-link py-2 px-3 rounded-lg hover:bg-white/5 flex items-center justify-between">
+                    <span>Get in Touch</span><i data-lucide="mail" class="w-4 h-4"></i>
+                </a>
+            </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-5xl mx-auto px-6 py-12 space-y-32 relative z-10">
-        
-        <!-- Hero Section -->
-        <section id="about" class="text-center py-12 flex flex-col items-center justify-center min-h-[75vh]">
-            <div data-aos="fade-up" class="inline-block px-4 py-1.5 mb-6 rounded-full glass-panel text-xs font-semibold tracking-wider text-cyan-400 uppercase">
-                Available for Opportunities
+    <!-- Main Content Area -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-36">
+
+        <!-- HERO SECTION -->
+        <section id="about" class="min-h-[80vh] flex flex-col justify-center items-center text-center pt-8">
+            <!-- Codename Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-xs font-mono theme-text-primary uppercase tracking-widest mb-8 shadow-[0_0_20px_var(--color-glow-1)] animate-bounce">
+                <span class="w-2 h-2 rounded-full" style="background-color: var(--color-secondary);"></span>
+                <span>SYSTEM ID: 4ROPEX • AVAILABLE FOR 2026/2027 ROLES</span>
             </div>
-            <h1 data-aos="fade-up" data-aos-delay="150" class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-                Hi, I'm <span class="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">Prabhat Kurmi</span>
+
+            <!-- Descriptive Hero Headline -->
+            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-8">
+                Innovating with <br class="hidden sm:inline">
+                <span class="shimmer-text">Prabhat Kurmi</span>
             </h1>
-            <p data-aos="fade-up" data-aos-delay="300" class="text-lg md:text-xl text-slate-400 max-w-2xl mb-10 leading-relaxed">
-                A passionate Computer Science Engineering student specializing in building robust web applications, solving complex problems, and exploring artificial intelligence.
+
+            <p class="text-base sm:text-lg md:text-xl text-slate-300/80 max-w-3xl mb-10 leading-relaxed font-normal">
+                Computer Science Engineer specializing in <span class="theme-text-primary font-semibold">Scalable Web Architecture</span>, <span class="theme-text-secondary font-semibold">Mobile Security Solutions</span>, and <span class="text-white font-semibold">System-level Development</span>. Operating under the creative moniker <span class="font-mono theme-text-primary">4ROPEX</span>.
             </p>
-            
-            <!-- Hero Social Links Icons -->
-            <div data-aos="fade-up" data-aos-delay="450" class="flex gap-4 justify-center">
-                <a href="https://github.com/Prabhat5353" target="_blank" class="p-3.5 rounded-xl glass-panel text-slate-300 hover:text-cyan-400 hover:scale-110 hover:border-cyan-500/30 transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+
+            <!-- Interactive Quick Stats Row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl mb-12">
+                <div class="glass-card p-5 rounded-2xl text-center border-t-2" style="border-top-color: var(--color-primary);">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-white font-mono">6.81</div>
+                    <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">B.Tech CGPA</div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl text-center border-t-2" style="border-top-color: var(--color-secondary);">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-white font-mono">4+</div>
+                    <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Flagship Projects</div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl text-center border-t-2" style="border-top-color: var(--color-primary);">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-white font-mono">6+</div>
+                    <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Certifications</div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl text-center border-t-2" style="border-top-color: var(--color-secondary);">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-white font-mono">2027</div>
+                    <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Graduation</div>
+                </div>
+            </div>
+
+            <!-- Social Action Buttons -->
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <a href="https://github.com/Prabhat5353" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl glass-card glass-card-hover font-semibold text-sm text-slate-200 group">
+                    <i data-lucide="github" class="w-5 h-5 text-slate-400 group-hover:theme-text-primary transition-colors"></i>
+                    <span>GitHub Profile</span>
+                    <i data-lucide="external-link" class="w-3.5 h-3.5 opacity-60"></i>
                 </a>
-                <a href="https://www.linkedin.com/in/prabhat5353" target="_blank" class="p-3.5 rounded-xl glass-panel text-slate-300 hover:text-cyan-400 hover:scale-110 hover:border-cyan-500/30 transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                <a href="https://www.linkedin.com/in/prabhat5353" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl glass-card glass-card-hover font-semibold text-sm text-slate-200 group">
+                    <i data-lucide="linkedin" class="w-5 h-5 theme-text-primary"></i>
+                    <span>LinkedIn Network</span>
+                    <i data-lucide="external-link" class="w-3.5 h-3.5 opacity-60"></i>
                 </a>
-                <a href="mailto:patelprabhatpatelkurmi6@gmail.com" class="p-3.5 rounded-xl glass-panel text-slate-300 hover:text-cyan-400 hover:scale-110 hover:border-cyan-500/30 transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                <a href="mailto:patelprabhatpatelkurmi6@gmail.com" class="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl glass-card glass-card-hover font-semibold text-sm text-slate-200 group">
+                    <i data-lucide="mail" class="w-5 h-5 theme-text-secondary"></i>
+                    <span>Email Prabhat</span>
                 </a>
-                <a href="tel:+918458878132" class="p-3.5 rounded-xl glass-panel text-slate-300 hover:text-cyan-400 hover:scale-110 hover:border-cyan-500/30 transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1 22 16.92z"></path></svg>
+                <a href="tel:+918458878132" class="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl glass-card glass-card-hover font-semibold text-sm text-slate-200 group">
+                    <i data-lucide="phone" class="w-5 h-5 theme-text-primary"></i>
+                    <span>Call Direct</span>
                 </a>
             </div>
         </section>
 
-        <!-- Education Section -->
-        <section id="education" data-aos="fade-up" class="glass-panel rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M6 18.8v-4L2 13"></path><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M18 13v6a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-6"></path></svg>
+        <!-- HORIZONTAL SCROLL SHOWCASE -->
+        <section id="showcase-horizontal" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-xs font-mono theme-text-primary uppercase tracking-widest">
+                        <i data-lucide="compass" class="w-4 h-4"></i> Horizontal Panoramas
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Visual Product Showcase</h2>
+                    <p class="text-sm text-slate-400 mt-1">Swipe horizontally on mobile/touch, or use the navigation toggles.</p>
+                </div>
+
+                <!-- Scroll Buttons for Horizontal Track -->
+                <div class="flex items-center gap-3">
+                    <button id="scroll-prev-btn" aria-label="Scroll Showcase Left" class="p-3 rounded-2xl glass-card hover:bg-white/10 active:scale-95 transition-all text-slate-300 hover:text-white">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <button id="scroll-next-btn" aria-label="Scroll Showcase Right" class="p-3 rounded-2xl glass-card hover:bg-white/10 active:scale-95 transition-all text-slate-300 hover:text-white">
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
             </div>
-            
-            <h2 class="text-3xl font-bold mb-10 flex items-center gap-3">
-                <span class="text-cyan-400">🎓</span> Education Pathway
-            </h2>
-            
-            <div class="space-y-10 relative before:absolute before:top-1 before:bottom-1 before:left-3 md:before:left-4 before:w-0.5 before:bg-white/10">
+
+            <!-- Horizontal Container Track -->
+            <div id="horizontal-track" class="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scroll-smooth hide-scroll-bar">
                 
-                <!-- B.Tech Course Details -->
-                <div class="relative pl-8 md:pl-12 group">
-                    <div class="absolute top-1.5 left-1.5 md:left-2.5 w-3.5 h-3.5 rounded-full bg-cyan-400 ring-4 ring-cyan-500/20 group-hover:scale-120 transition-transform"></div>
-                    <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
-                        <div>
-                            <h3 class="text-xl font-bold text-white transition-colors group-hover:text-cyan-400">Sagar Institute of science Technology Research (SISTec), Bhopal</h3>[cite: 1]
-                            <p class="text-slate-300 font-medium mt-1">B.Tech in Computer Science Engineering</p>[cite: 1]
+                <!-- Horizontal Card 1: Lockdown App -->
+                <div class="min-w-[85vw] sm:min-w-[420px] md:min-w-[480px] lg:min-w-[520px] snap-center glass-card rounded-3xl overflow-hidden flex flex-col justify-between group glass-card-hover">
+                    <div class="relative h-64 overflow-hidden bg-slate-900">
+                        <img 
+                            src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80" 
+                            alt="Lockdown Mobile Security Suite preview"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                            loading="lazy"
+                            onerror="this.src='https://placehold.co/800x500/0f172a/00f2fe?text=Project+Lockdown'"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+                        <div class="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 border theme-border-primary text-[11px] font-mono theme-text-primary backdrop-blur-md">
+                            SYSTEM ID: 4ROPEX-LK01
                         </div>
-                        <span class="px-3 py-1 text-xs rounded-full bg-white/10 text-slate-300 font-mono border border-white/5 self-start whitespace-nowrap">2023 - 2027</span>[cite: 1]
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <span class="text-xs uppercase font-mono tracking-wider theme-text-secondary">Parental Control Engine</span>
+                            <h3 class="text-2xl font-bold text-white mt-0.5">Lockdown Guardian</h3>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2 text-slate-300 text-sm font-semibold bg-white/5 border border-white/10 w-fit px-3 py-1.5 rounded-xl mt-3">
-                        <span>Current CGPA:</span>
-                        <span class="text-purple-400">6.81 / 10</span>[cite: 1]
+                    <div class="p-6 flex flex-col flex-grow justify-between gap-6">
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            A dual-module guardian architecture designed for parent-student ecosystem security. Gives parents real-time approval pipelines over app executions, transactional and payment access filters, and tamper-resistant permission shields.
+                        </p>
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-5">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono glass-pill theme-text-primary">Android OS</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono glass-pill theme-text-secondary">Security Layers</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono glass-pill text-slate-300">Sync Engine</span>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-white/10 text-xs">
+                                <span class="text-slate-400 font-mono">Status: Production Spec</span>
+                                <a href="https://github.com/Prabhat5353" target="_blank" class="theme-text-primary hover:underline font-semibold inline-flex items-center gap-1.5">
+                                    <span>Inspect Repo</span> <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 12th Details -->
-                <div class="relative pl-8 md:pl-12 group">
-                    <div class="absolute top-1.5 left-1.5 md:left-2.5 w-3.5 h-3.5 rounded-full bg-purple-400 ring-4 ring-purple-500/20 group-hover:scale-120 transition-transform"></div>
-                    <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
-                        <div>
-                            <h3 class="text-xl font-bold text-white transition-colors group-hover:text-purple-400">VATSALYA Senior Secondary School, Sagar</h3>
-                            <p class="text-slate-300 font-medium mt-1">Higher Secondary Certificate (Class XII) — CBSE Board</p>
-                            <p class="text-xs text-slate-400 font-mono mt-1">Specialization: Science with Mathematics Stream</p>
+                <!-- Horizontal Card 2: EduTrack -->
+                <div class="min-w-[85vw] sm:min-w-[420px] md:min-w-[480px] lg:min-w-[520px] snap-center glass-card rounded-3xl overflow-hidden flex flex-col justify-between group glass-card-hover">
+                    <div class="relative h-64 overflow-hidden bg-slate-900">
+                        <img 
+                            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80" 
+                            alt="EduTrack Analytics Dashboard screenshot"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                            loading="lazy"
+                            onerror="this.src='https://placehold.co/800x500/0f172a/4facfe?text=EduTrack+Analytics'"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+                        <div class="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 border theme-border-secondary text-[11px] font-mono theme-text-secondary backdrop-blur-md">
+                            SYSTEM ID: 4ROPEX-ET02
+                        </div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <span class="text-xs uppercase font-mono tracking-wider theme-text-primary">Predictive Campus Analytics</span>
+                            <h3 class="text-2xl font-bold text-white mt-0.5">EduTrack Unified Portal</h3>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 text-slate-300 text-sm font-semibold bg-white/5 border border-white/10 w-fit px-3 py-1.5 rounded-xl mt-3">
-                        <span>Aggregate Score:</span>
-                        <span class="text-purple-400">69.4%</span>
+                    <div class="p-6 flex flex-col flex-grow justify-between gap-6">
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Enterprise scholastic management system allowing educators to grade, audit attendance, and run forecast algorithms for final graduation performance. Built with an intuitive triple-pane role dashboard for Admin, Teacher, and Student.
+                        </p>
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-5">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono glass-pill theme-text-primary">React.js</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono glass-pill theme-text-secondary">Node.js</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono glass-pill text-slate-300">MySQL DB</span>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-white/10 text-xs">
+                                <span class="text-slate-400 font-mono">Status: Full Stack Active</span>
+                                <a href="https://github.com/Prabhat5353" target="_blank" class="theme-text-primary hover:underline font-semibold inline-flex items-center gap-1.5">
+                                    <span>Inspect Repo</span> <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 10th Details -->
-                <div class="relative pl-8 md:pl-12 group">
-                    <div class="absolute top-1.5 left-1.5 md:left-2.5 w-3.5 h-3.5 rounded-full bg-emerald-400 ring-4 ring-emerald-500/20 group-hover:scale-120 transition-transform"></div>
-                    <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
-                        <div>
-                            <h3 class="text-xl font-bold text-white transition-colors group-hover:text-emerald-400">VATSALYA Senior Secondary School, Sagar</h3>
-                            <p class="text-slate-300 font-medium mt-1">Secondary School Examination (Class X) — CBSE Board</p>
+                <!-- Horizontal Card 3: Project SSS -->
+                <div class="min-w-[85vw] sm:min-w-[420px] md:min-w-[480px] lg:min-w-[520px] snap-center glass-card rounded-3xl overflow-hidden flex flex-col justify-between group glass-card-hover">
+                    <div class="relative h-64 overflow-hidden bg-slate-900">
+                        <img 
+                            src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80" 
+                            alt="Project Social Security System GPS and routing preview"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                            loading="lazy"
+                            onerror="this.src='https://placehold.co/800x500/0f172a/10b981?text=Project+SSS'"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+                        <div class="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 border theme-border-primary text-[11px] font-mono theme-text-primary backdrop-blur-md">
+                            SYSTEM ID: 4ROPEX-SS03
+                        </div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <span class="text-xs uppercase font-mono tracking-wider theme-text-secondary">Geo-Safety Intelligence</span>
+                            <h3 class="text-2xl font-bold text-white mt-0.5">Project SSS (Social Security)</h3>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 text-slate-300 text-sm font-semibold bg-white/5 border border-white/10 w-fit px-3 py-1.5 rounded-xl mt-3">
-                        <span>CGPA Score:</span>
-                        <span class="text-purple-400">62.5% / 10</span>
+                    <div class="p-6 flex flex-col flex-grow justify-between gap-6">
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Social Security safety ecosystem incorporating real-time telemetry, location-based hazard alerts, voice recognition SOS trigger macros, and optimal dynamic safe routing across cities.
+                        </p>
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-5">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono glass-pill theme-text-primary">Real-time GPS</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono glass-pill theme-text-secondary">Voice Trigger</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono glass-pill text-slate-300">Incident Feed</span>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-white/10 text-xs">
+                                <span class="text-slate-400 font-mono">Status: Prototype Validated</span>
+                                <a href="https://github.com/Prabhat5353" target="_blank" class="theme-text-primary hover:underline font-semibold inline-flex items-center gap-1.5">
+                                    <span>Inspect Repo</span> <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Horizontal Card 4: ERP Student System -->
+                <div class="min-w-[85vw] sm:min-w-[420px] md:min-w-[480px] lg:min-w-[520px] snap-center glass-card rounded-3xl overflow-hidden flex flex-col justify-between group glass-card-hover">
+                    <div class="relative h-64 overflow-hidden bg-slate-900">
+                        <img 
+                            src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80" 
+                            alt="ERP Student System Overview"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                            loading="lazy"
+                            onerror="this.src='https://placehold.co/800x500/0f172a/f59e0b?text=ERP+Management'"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+                        <div class="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 border theme-border-secondary text-[11px] font-mono theme-text-secondary backdrop-blur-md">
+                            SYSTEM ID: 4ROPEX-ER04
+                        </div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <span class="text-xs uppercase font-mono tracking-wider theme-text-primary">Enterprise Operations</span>
+                            <h3 class="text-2xl font-bold text-white mt-0.5">ERP Student Management</h3>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow justify-between gap-6">
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Holistic ERP platform integrating student cohorts, faculty scheduling, and administrative accounting into a unified web portal with fine-grained role controls and database integrity.
+                        </p>
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-5">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono glass-pill theme-text-primary">Fullstack Web</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono glass-pill theme-text-secondary">Node Server</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono glass-pill text-slate-300">Relational DB</span>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-white/10 text-xs">
+                                <span class="text-slate-400 font-mono">Status: Tested & Deployed</span>
+                                <a href="https://github.com/Prabhat5353" target="_blank" class="theme-text-primary hover:underline font-semibold inline-flex items-center gap-1.5">
+                                    <span>Inspect Repo</span> <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
             </div>
         </section>
 
-        <!-- Technical Skills Section -->
+        <!-- VERTICAL FEATURED PROJECTS -->
+        <section id="featured-projects" class="space-y-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-xs font-mono theme-text-secondary uppercase tracking-widest">
+                        <i data-lucide="layers" class="w-4 h-4"></i> Deep Vertical Showcase
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Detailed Engineering Projects</h2>
+                </div>
+
+                <!-- Interactive Filter Controls -->
+                <div class="flex flex-wrap gap-2" id="project-filters">
+                    <button data-filter="all" class="filter-btn active px-3.5 py-1.5 rounded-full text-xs font-mono font-medium theme-btn-gradient transition-all">All</button>
+                    <button data-filter="web" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-mono font-medium glass-card hover:bg-white/10 text-slate-300 transition-all">Web/Backend</button>
+                    <button data-filter="mobile" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-mono font-medium glass-card hover:bg-white/10 text-slate-300 transition-all">Mobile/OS</button>
+                    <button data-filter="security" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-mono font-medium glass-card hover:bg-white/10 text-slate-300 transition-all">Security</button>
+                </div>
+            </div>
+
+            <!-- Vertical Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="projects-grid">
+                
+                <!-- Project 1 -->
+                <div class="project-card glass-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between glass-card-hover group tilt-card" data-category="mobile security">
+                    <div class="space-y-5">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-mono theme-text-secondary tracking-wider">PROJECT 01 // 4ROPEX-SEC</span>
+                                <h3 class="text-2xl sm:text-3xl font-extrabold text-white group-hover:theme-text-primary transition-colors mt-1">Lockdown</h3>
+                            </div>
+                            <a href="https://github.com/Prabhat5353" target="_blank" class="p-3 rounded-2xl bg-white/5 border border-white/10 text-slate-300 hover:theme-text-primary hover:border-white/30 transition-all">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+
+                        <!-- Descriptive Visual Banner -->
+                        <div class="rounded-2xl overflow-hidden h-48 border border-white/10 relative">
+                            <img 
+                                src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80" 
+                                alt="Lockdown security framework interface" 
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                loading="lazy"
+                            >
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                            <div class="absolute bottom-3 left-3 flex gap-2">
+                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-mono glass-pill theme-text-primary">Child Device Sync</span>
+                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-mono glass-pill theme-text-secondary">Payment Sandbox</span>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            A complete and hardened mobile application where parents proactively monitor student smartphones. Key capabilities include app usage permissions, restrictive checkout toggles for UPI/finance applications, grade analytics monitoring, and proactive defense triggers against unauthorized app installations.
+                        </p>
+                    </div>
+
+                    <div class="pt-6 mt-6 border-t border-white/10">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill theme-text-primary font-mono">Android App Dev</span>
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill theme-text-secondary font-mono">Security Controls</span>
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill text-slate-300 font-mono">Telemetry</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+                            <span>Key Role: Lead Developer</span>
+                            <span class="theme-text-primary">Android SDK • Java/Kotlin</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card glass-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between glass-card-hover group tilt-card" data-category="web">
+                    <div class="space-y-5">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-mono theme-text-primary tracking-wider">PROJECT 02 // 4ROPEX-DATA</span>
+                                <h3 class="text-2xl sm:text-3xl font-extrabold text-white group-hover:theme-text-primary transition-colors mt-1">EduTrack</h3>
+                            </div>
+                            <a href="https://github.com/Prabhat5353" target="_blank" class="p-3 rounded-2xl bg-white/5 border border-white/10 text-slate-300 hover:theme-text-primary hover:border-white/30 transition-all">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+
+                        <!-- Descriptive Visual Banner -->
+                        <div class="rounded-2xl overflow-hidden h-48 border border-white/10 relative">
+                            <img 
+                                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" 
+                                alt="EduTrack project management metrics" 
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                loading="lazy"
+                            >
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                            <div class="absolute bottom-3 left-3 flex gap-2">
+                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-mono glass-pill theme-text-primary">Analytics Machine</span>
+                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-mono glass-pill theme-text-secondary">Role-Based Access</span>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            An institution-level web suite for schools and colleges where faculty upload marks, quizzes, and real-time attendance. Employs statistical trend algorithms to forecast final academic outcomes, empowering parents and educators to intervene early. Includes a full enterprise admin portal.
+                        </p>
+                    </div>
+
+                    <div class="pt-6 mt-6 border-t border-white/10">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill theme-text-primary font-mono">React.js</span>
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill theme-text-secondary font-mono">Node.js</span>
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill text-slate-300 font-mono">MySQL</span>
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill theme-text-secondary font-mono">Forecasting</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+                            <span>Architecture: MVC / REST</span>
+                            <span class="theme-text-secondary">Interactive Dashboards</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card glass-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between glass-card-hover group tilt-card" data-category="security mobile">
+                    <div class="space-y-5">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-mono theme-text-secondary tracking-wider">PROJECT 03 // 4ROPEX-GEO</span>
+                                <h3 class="text-2xl sm:text-3xl font-extrabold text-white group-hover:theme-text-secondary transition-colors mt-1">Project SSS (Social Security)</h3>
+                            </div>
+                            <a href="https://github.com/Prabhat5353" target="_blank" class="p-3 rounded-2xl bg-white/5 border border-white/10 text-slate-300 hover:theme-text-primary hover:border-white/30 transition-all">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+
+                        <!-- Descriptive Visual Banner -->
+                        <div class="rounded-2xl overflow-hidden h-48 border border-white/10 relative">
+                            <img 
+                                src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80" 
+                                alt="GPS and live security map" 
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                loading="lazy"
+                            >
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                            <div class="absolute bottom-3 left-3 flex gap-2">
+                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-mono glass-pill theme-text-primary">Safe Path Engine</span>
+                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-mono glass-pill theme-text-secondary">Voice Commands</span>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Engineered for human protection, Project SSS integrates real-time GPS telemetry, crowd-sourced incident heatmaps, smart emergency route recommendations avoiding high-hazard vectors, and responsive speech recognition that triggers silent help calls during duress.
+                        </p>
+                    </div>
+
+                    <div class="pt-6 mt-6 border-t border-white/10">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill theme-text-primary font-mono">Real-Time GPS</span>
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill theme-text-secondary font-mono">Safe Routing</span>
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill text-slate-300 font-mono">Voice Recognition</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+                            <span>Focus: Personal Safety Tech</span>
+                            <span class="theme-text-primary">GeoJSON & Speech API</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="project-card glass-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between glass-card-hover group tilt-card" data-category="web">
+                    <div class="space-y-5">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-mono theme-text-primary tracking-wider">PROJECT 04 // 4ROPEX-ERP</span>
+                                <h3 class="text-2xl sm:text-3xl font-extrabold text-white group-hover:theme-text-primary transition-colors mt-1">ERP Student Portal</h3>
+                            </div>
+                            <a href="https://github.com/Prabhat5353" target="_blank" class="p-3 rounded-2xl bg-white/5 border border-white/10 text-slate-300 hover:theme-text-primary hover:border-white/30 transition-all">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+
+                        <!-- Descriptive Visual Banner -->
+                        <div class="rounded-2xl overflow-hidden h-48 border border-white/10 relative">
+                            <img 
+                                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" 
+                                alt="ERP operations and database reporting preview" 
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                loading="lazy"
+                            >
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                            <div class="absolute bottom-3 left-3 flex gap-2">
+                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-mono glass-pill theme-text-primary">Database Pipeline</span>
+                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-mono glass-pill theme-text-secondary">Central Admin</span>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            An ERP-based student management system integrating students, teachers, and administrators on a single synchronized platform. Seamlessly records attendance archives, course deliverables, operational notes, and secure data transit across university servers.
+                        </p>
+                    </div>
+
+                    <div class="pt-6 mt-6 border-t border-white/10">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill theme-text-primary font-mono">HTML5 / Modern JS</span>
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill text-slate-300 font-mono">CSS3 / Responsive</span>
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill theme-text-secondary font-mono">Node.js Server</span>
+                            <span class="text-xs px-3 py-1 rounded-lg glass-pill text-slate-300 font-mono">MySQL Engine</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+                            <span>Focus: Academic Infrastructure</span>
+                            <span class="theme-text-primary">ACID Compliant</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TECHNICAL SKILLS MATRIX -->
         <section id="skills" class="space-y-8">
-            <h2 class="text-3xl font-bold flex items-center gap-3" data-aos="fade-right">
-                <span class="text-cyan-400">💻</span> Technical Skills
-            </h2>
+            <div>
+                <div class="inline-flex items-center gap-2 text-xs font-mono theme-text-primary uppercase tracking-widest">
+                    <i data-lucide="cpu" class="w-4 h-4"></i> Capabilities Spectrum
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Technical Stack & Systems</h2>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                <!-- Languages Card -->
-                <div data-aos="zoom-in" data-aos-delay="100" class="glass-panel rounded-2xl p-6 shadow-xl hover:-translate-y-2 hover:border-purple-500/30 transition-all duration-300 group">
-                    <h3 class="text-lg font-bold text-purple-400 mb-4 flex items-center gap-2">🚀 Languages</h3>
+                <!-- Languages & Core -->
+                <div class="glass-card rounded-3xl p-7 glass-card-hover border-t-4" style="border-top-color: var(--color-primary);">
+                    <div class="w-12 h-12 rounded-2xl glass-pill flex items-center justify-center theme-text-primary mb-5">
+                        <i data-lucide="terminal" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Core Languages</h3>
+                    <p class="text-xs text-slate-400 mb-6">Proficient in compiled, scripted, and structured languages with strong algorithmic depth.</p>
+                    
                     <div class="flex flex-wrap gap-2">
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">C++</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">Java</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">Python</span>
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">JavaScript</span>
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">HTML</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">CSS</span>[cite: 1]
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-primary">C++</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-primary">Java</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-primary">Python</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-primary">JavaScript (ES6+)</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono text-slate-300">HTML5</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono text-slate-300">CSS3</span>
                     </div>
                 </div>
 
-                <!-- Web & System Engineering Card -->
-                <div data-aos="zoom-in" data-aos-delay="200" class="glass-panel rounded-2xl p-6 shadow-xl hover:-translate-y-2 hover:border-cyan-500/30 transition-all duration-300 group">
-                    <h3 class="text-lg font-bold text-cyan-400 mb-4 flex items-center gap-2">🌐 Development & Systems</h3>
+                <!-- Web, Cloud & Low-Level -->
+                <div class="glass-card rounded-3xl p-7 glass-card-hover border-t-4" style="border-top-color: var(--color-secondary);">
+                    <div class="w-12 h-12 rounded-2xl glass-pill flex items-center justify-center theme-text-secondary mb-5">
+                        <i data-lucide="code" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Web & Systems</h3>
+                    <p class="text-xs text-slate-400 mb-6">Full-cycle development from frontend reactive trees to low-level Linux recovery compilation.</p>
+                    
                     <div class="flex flex-wrap gap-2">
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">React.js</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">Node.js</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">Android App Dev</span>
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">Linux Developer</span>
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">Custom Recovery Builder</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-secondary">React.js</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-secondary">Node.js</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-secondary">Android Dev</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-secondary">Linux Developer</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono text-slate-300">Recovery Builder</span>
                     </div>
                 </div>
 
-                <!-- Core Engineering & Tools Card -->
-                <div data-aos="zoom-in" data-aos-delay="300" class="glass-panel rounded-2xl p-6 shadow-xl hover:-translate-y-2 hover:border-emerald-500/30 transition-all duration-300 group">
-                    <h3 class="text-lg font-bold text-emerald-400 mb-4 flex items-center gap-2">⚙️ Core & Tools</h3>
+                <!-- Engineering & Data Science -->
+                <div class="glass-card rounded-3xl p-7 glass-card-hover border-t-4" style="border-top-color: var(--color-primary);">
+                    <div class="w-12 h-12 rounded-2xl glass-pill flex items-center justify-center theme-text-primary mb-5">
+                        <i data-lucide="database" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">CS Fundamentals</h3>
+                    <p class="text-xs text-slate-400 mb-6">Strong foundation in computational efficiency, relational design, and concurrent systems.</p>
+                    
                     <div class="flex flex-wrap gap-2">
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">DSA</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">DBMS</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">MySQL</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">Operating Systems</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">OOPS</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/5">GitHub</span>[cite: 1]
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-primary">DSA</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-primary">DBMS</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-primary">MySQL</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-primary">Operating Systems</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono theme-text-primary">OOPS Concept</span>
+                        <span class="text-xs px-3 py-1.5 rounded-xl glass-pill font-mono text-slate-300">Git & GitHub</span>
                     </div>
                 </div>
 
             </div>
         </section>
 
-        <!-- Projects Section -->
-        <section id="projects" class="space-y-8">
-            <h2 class="text-3xl font-bold flex items-center gap-3" data-aos="fade-right">
-                <span class="text-cyan-400">📂</span> Featured Projects
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- EDUCATION PATHWAY -->
+        <section id="education" class="space-y-8">
+            <div>
+                <div class="inline-flex items-center gap-2 text-xs font-mono theme-text-primary uppercase tracking-widest">
+                    <i data-lucide="graduation-cap" class="w-4 h-4"></i> Academic Career
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Education Milestones</h2>
+            </div>
+
+            <div class="relative border-l-2 border-white/10 ml-4 sm:ml-8 pl-6 sm:pl-10 space-y-10">
                 
-                <!-- Project: Lockdown -->
-                <div data-aos="fade-up" data-aos-delay="100" class="glass-panel rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-2xl hover:border-purple-500/20 transition-all duration-300 group">
-                    <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-2xl font-bold group-hover:text-purple-400 transition-colors">Lockdown</h3>
-                            <a href="https://github.com/Prabhat5353" target="_blank" class="p-2.5 bg-white/5 rounded-xl border border-white/10 hover:bg-cyan-500 hover:text-slate-900 transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
-                            </a>
+                <!-- B.Tech Card -->
+                <div class="relative group">
+                    <div class="absolute -left-[31px] sm:-left-[47px] top-1.5 w-5 h-5 rounded-full ring-8 group-hover:scale-125 transition-transform duration-300" style="background-color: var(--color-primary); ring-color: var(--color-glow-1);"></div>
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 glass-card-hover">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
+                            <div>
+                                <span class="px-2.5 py-1 rounded-full glass-pill text-xs font-mono theme-text-primary">Higher Education</span>
+                                <h3 class="text-xl sm:text-2xl font-bold text-white mt-2 group-hover:theme-text-primary transition-colors">Sagar Institute of Science Technology Research (SISTec), Bhopal</h3>
+                                <p class="text-slate-300 font-medium text-sm mt-1">Bachelor of Technology — Computer Science Engineering</p>
+                            </div>
+                            <span class="px-3.5 py-1.5 rounded-xl glass-pill text-xs font-mono theme-text-secondary self-start">2023 - 2027</span>
                         </div>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                            A complete app where parents monitor student phone and allow app access, Allow payments apps and other apps and also see grade assignment and Having security System.
-                        </p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 pt-4 border-t border-white/5">
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-purple-300 font-mono">Android App Dev</span>
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-slate-300 font-mono">Security System</span>
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-slate-300 font-mono">Device Sync</span>
+                        <div class="mt-4 flex flex-wrap items-center gap-3">
+                            <div class="px-3 py-1.5 rounded-xl glass-pill text-xs font-mono">
+                                Current Score: <span class="theme-text-primary font-bold">6.81 / 10 CGPA</span>
+                            </div>
+                            <div class="px-3 py-1.5 rounded-xl glass-pill text-xs font-mono text-slate-300">
+                                Location: Bhopal, Madhya Pradesh
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Project: EduTrack -->
-                <div data-aos="fade-up" data-aos-delay="200" class="glass-panel rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-2xl hover:border-cyan-500/20 transition-all duration-300 group">
-                    <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-2xl font-bold group-hover:text-cyan-400 transition-colors">EduTrack</h3>
-                            <a href="https://github.com/Prabhat5353" target="_blank" class="p-2.5 bg-white/5 rounded-xl border border-white/10 hover:bg-cyan-500 hover:text-slate-900 transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
-                            </a>
+                <!-- 12th Senior Secondary -->
+                <div class="relative group">
+                    <div class="absolute -left-[31px] sm:-left-[47px] top-1.5 w-5 h-5 rounded-full ring-8 group-hover:scale-125 transition-transform duration-300" style="background-color: var(--color-secondary); ring-color: var(--color-glow-2);"></div>
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 glass-card-hover">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
+                            <div>
+                                <span class="px-2.5 py-1 rounded-full glass-pill text-xs font-mono theme-text-secondary">Higher Secondary Examination</span>
+                                <h3 class="text-xl sm:text-2xl font-bold text-white mt-2 group-hover:theme-text-secondary transition-colors">VATSALYA Senior Secondary School, Sagar</h3>
+                                <p class="text-slate-300 font-medium text-sm mt-1">Class XII — CBSE Board (Science & Mathematics Stream)</p>
+                            </div>
+                            <span class="px-3.5 py-1.5 rounded-xl glass-pill text-xs font-mono theme-text-secondary self-start">CBSE Stream</span>
                         </div>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                            A complete Project for school and clg where a teacher can upload marks and assignment quiz marks attendance , make prediction of final result , same for students having these features , same for parents and it also having admin panel.
-                        </p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 pt-4 border-t border-white/5">
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-cyan-300 font-mono">React.js</span>
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-slate-300 font-mono">Node.js</span>
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-slate-300 font-mono">MySQL</span>
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-slate-300 font-mono">Predictive Analytics</span>
+                        <div class="mt-4 flex flex-wrap items-center gap-3">
+                            <div class="px-3 py-1.5 rounded-xl glass-pill text-xs font-mono">
+                                Aggregate Score: <span class="theme-text-secondary font-bold">69.4%</span>
+                            </div>
+                            <div class="px-3 py-1.5 rounded-xl glass-pill text-xs font-mono text-slate-300">
+                                Major: Physics, Chemistry, Mathematics
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Project: Social Security System (SSS) -->
-                <div data-aos="fade-up" data-aos-delay="300" class="glass-panel rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-2xl hover:border-emerald-500/20 transition-all duration-300 group">
-                    <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-2xl font-bold group-hover:text-emerald-400 transition-colors">Project SSS</h3>
-                            <a href="https://github.com/Prabhat5353" target="_blank" class="p-2.5 bg-white/5 rounded-xl border border-white/10 hover:bg-cyan-500 hover:text-slate-900 transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
-                            </a>
+                <!-- 10th Secondary -->
+                <div class="relative group">
+                    <div class="absolute -left-[31px] sm:-left-[47px] top-1.5 w-5 h-5 rounded-full ring-8 group-hover:scale-125 transition-transform duration-300" style="background-color: var(--color-primary); ring-color: var(--color-glow-1);"></div>
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 glass-card-hover">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
+                            <div>
+                                <span class="px-2.5 py-1 rounded-full glass-pill text-xs font-mono theme-text-primary">Secondary School Examination</span>
+                                <h3 class="text-xl sm:text-2xl font-bold text-white mt-2 group-hover:theme-text-primary transition-colors">VATSALYA Senior Secondary School, Sagar</h3>
+                                <p class="text-slate-300 font-medium text-sm mt-1">Class X — CBSE Board</p>
+                            </div>
+                            <span class="px-3.5 py-1.5 rounded-xl glass-pill text-xs font-mono theme-text-primary self-start">CBSE Board</span>
                         </div>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                            Project SSS(Social Security System) where it provide a security for the User and real time tracking and Incident news and Safe routing direction and VOICE many more feature.
-                        </p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 pt-4 border-t border-white/5">
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-emerald-300 font-mono">Real-time GPS</span>
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-slate-300 font-mono">Safe Routing</span>
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-slate-300 font-mono">Voice Recognition</span>
-                    </div>
-                </div>
-
-                <!-- Project: ERP Student Management System -->
-                <div data-aos="fade-up" data-aos-delay="400" class="glass-panel rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-2xl hover:border-cyan-500/20 transition-all duration-300 group">
-                    <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-2xl font-bold group-hover:text-cyan-400 transition-colors">ERP Based Student Management System</h3>
-                            <a href="https://github.com/Prabhat5353" target="_blank" class="p-2.5 bg-white/5 rounded-xl border border-white/10 hover:bg-cyan-500 hover:text-slate-900 transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
-                            </a>
+                        <div class="mt-4 flex flex-wrap items-center gap-3">
+                            <div class="px-3 py-1.5 rounded-xl glass-pill text-xs font-mono">
+                                CGPA Result: <span class="theme-text-primary font-bold">62.5%</span>
+                            </div>
                         </div>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                            An ERP-based student management system integrates students, teachers, and administrators on a single platform. It manages attendance, academic records, communication, and operations efficiently.[cite: 1]
-                        </p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 pt-4 border-t border-white/5">
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-slate-300 font-mono">HTML</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-slate-300 font-mono">CSS</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-slate-300 font-mono">JavaScript</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-slate-300 font-mono">Node.js</span>[cite: 1]
-                        <span class="text-xs px-2.5 py-1 rounded-md bg-white/5 text-slate-300 font-mono">MySQL</span>[cite: 1]
                     </div>
                 </div>
 
             </div>
         </section>
 
-        <!-- Certifications Section -->
+        <!-- CERTIFICATIONS & VERIFIED CREDENTIALS -->
         <section id="certifications" class="space-y-8">
-            <h2 class="text-3xl font-bold flex items-center gap-3" data-aos="fade-right">
-                <span class="text-cyan-400">✨</span> Certifications & Credentials
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                <!-- CCNA Course 3 -->
-                <div data-aos="fade-up" class="glass-panel rounded-2xl p-6 flex flex-col justify-between shadow-xl hover:border-cyan-400/30 transition-all duration-300">
-                    <div>
-                        <div class="flex justify-between items-start gap-4">
-                            <h3 class="text-lg font-bold text-white">CCNA: Enterprise Networking, Security, and Automation</h3>
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 whitespace-nowrap">Cisco</span>
-                        </div>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">The third in a three-course series to build your networking skills and get ready for CCNA certification and associate-level jobs.</p>
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-xs font-mono theme-text-primary uppercase tracking-widest">
+                        <i data-lucide="award" class="w-4 h-4"></i> Verified Credentials
                     </div>
-                    <div class="mt-4 pt-4 border-t border-white/5">
-                        <a href="https://drive.google.com/file/d/13ezKTD2ntb_5JsuNKc_-R78ycQ4zbLav/view?usp=drive_link" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Download Certificate
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Certifications & Accreditations</h2>
+                </div>
+                <div class="text-xs text-slate-400 font-mono">
+                    Official Cisco & IBM Credentials
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Cisco CCNA 3 -->
+                <div class="glass-card rounded-3xl p-6 flex flex-col justify-between glass-card-hover border-t-2" style="border-top-color: var(--color-primary);">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-mono glass-pill theme-text-primary font-semibold">Cisco CCNA</span>
+                            <i data-lucide="shield-check" class="w-5 h-5 theme-text-primary"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white leading-snug">Enterprise Networking, Security, & Automation</h3>
+                        <p class="text-slate-300 text-xs mt-2.5 leading-relaxed">
+                            Advanced Cisco architectures, network automation pipelines, WAN security protocols, and controller-based infrastructure.
+                        </p>
+                    </div>
+                    <div class="pt-5 mt-5 border-t border-white/10">
+                        <a href="https://drive.google.com/file/d/13ezKTD2ntb_5JsuNKc_-R78ycQ4zbLav/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl glass-pill hover:theme-btn-gradient text-xs font-bold font-mono transition-all flex items-center justify-center gap-2 text-white">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>View Certificate</span>
                         </a>
                     </div>
                 </div>
 
-                <!-- CCNA Course 2 -->
-                <div data-aos="fade-up" data-aos-delay="50" class="glass-panel rounded-2xl p-6 flex flex-col justify-between shadow-xl hover:border-cyan-400/30 transition-all duration-300">
+                <!-- Cisco CCNA 2 -->
+                <div class="glass-card rounded-3xl p-6 flex flex-col justify-between glass-card-hover border-t-2" style="border-top-color: var(--color-primary);">
                     <div>
-                        <div class="flex justify-between items-start gap-4">
-                            <h3 class="text-lg font-bold text-white">CCNA: Switching, Routing, and Wireless Essentials</h3>
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 whitespace-nowrap">Cisco</span>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-mono glass-pill theme-text-primary font-semibold">Cisco CCNA</span>
+                            <i data-lucide="shield-check" class="w-5 h-5 theme-text-primary"></i>
                         </div>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">The second in a three-course series to build your networking skills and get ready for CCNA certification and associate-level jobs.</p>
+                        <h3 class="text-lg font-bold text-white leading-snug">Switching, Routing, & Wireless Essentials</h3>
+                        <p class="text-slate-300 text-xs mt-2.5 leading-relaxed">
+                            VLAN topologies, inter-VLAN routing, STP protocol redundancy, EtherChannel, and wireless LAN configuration standards.
+                        </p>
                     </div>
-                    <div class="mt-4 pt-4 border-t border-white/5">
-                        <a href="https://drive.google.com/file/d/1n0qjuqheeGKIFw_ZmV3TCY1g0JH1gC_a/view?usp=drive_link" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Download Certificate
+                    <div class="pt-5 mt-5 border-t border-white/10">
+                        <a href="https://drive.google.com/file/d/1n0qjuqheeGKIFw_ZmV3TCY1g0JH1gC_a/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl glass-pill hover:theme-btn-gradient text-xs font-bold font-mono transition-all flex items-center justify-center gap-2 text-white">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>View Certificate</span>
                         </a>
                     </div>
                 </div>
 
-                <!-- CCNA Course 1 -->
-                <div data-aos="fade-up" data-aos-delay="100" class="glass-panel rounded-2xl p-6 flex flex-col justify-between shadow-xl hover:border-cyan-400/30 transition-all duration-300">
+                <!-- Cisco CCNA 1 -->
+                <div class="glass-card rounded-3xl p-6 flex flex-col justify-between glass-card-hover border-t-2" style="border-top-color: var(--color-primary);">
                     <div>
-                        <div class="flex justify-between items-start gap-4">
-                            <h3 class="text-lg font-bold text-white">CCNA: Introduction to Networks</h3>
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 whitespace-nowrap">Cisco</span>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-mono glass-pill theme-text-primary font-semibold">Cisco CCNA</span>
+                            <i data-lucide="shield-check" class="w-5 h-5 theme-text-primary"></i>
                         </div>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">The first in a three-course series to build your networking skills and get ready for CCNA certification and associate-level jobs.</p>
+                        <h3 class="text-lg font-bold text-white leading-snug">Introduction to Networks (ITN)</h3>
+                        <p class="text-slate-300 text-xs mt-2.5 leading-relaxed">
+                            OSI & TCP/IP stack models, IPv4/IPv6 subnet planning, Ethernet fundamentals, and router/switch initial configurations.
+                        </p>
                     </div>
-                    <div class="mt-4 pt-4 border-t border-white/5">
-                        <a href="https://drive.google.com/file/d/1Q03b0gl5Ofzn_2wPW5uvbKsxjMIw8h6_/view?usp=drive_link" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Download Certificate
+                    <div class="pt-5 mt-5 border-t border-white/10">
+                        <a href="https://drive.google.com/file/d/1Q03b0gl5Ofzn_2wPW5uvbKsxjMIw8h6_/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl glass-pill hover:theme-btn-gradient text-xs font-bold font-mono transition-all flex items-center justify-center gap-2 text-white">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>View Certificate</span>
                         </a>
                     </div>
                 </div>
 
-                <!-- Python Essentials 2 -->
-                <div data-aos="fade-up" data-aos-delay="150" class="glass-panel rounded-2xl p-6 flex flex-col justify-between shadow-xl hover:border-purple-400/30 transition-all duration-300">
+                <!-- Cisco Python 2 -->
+                <div class="glass-card rounded-3xl p-6 flex flex-col justify-between glass-card-hover border-t-2" style="border-top-color: var(--color-secondary);">
                     <div>
-                        <div class="flex justify-between items-start gap-4">
-                            <h3 class="text-lg font-bold text-white">Python Essentials 2</h3>
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20 whitespace-nowrap">Cisco Network Academy</span>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-mono glass-pill theme-text-secondary font-semibold">Cisco NetAcad</span>
+                            <i data-lucide="terminal" class="w-5 h-5 theme-text-secondary"></i>
                         </div>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">Expand your computer programming skills and get ready to earn a certification.</p>
+                        <h3 class="text-lg font-bold text-white leading-snug">Python Essentials 2 (Intermediate)</h3>
+                        <p class="text-slate-300 text-xs mt-2.5 leading-relaxed">
+                            Object-oriented design patterns, closures, generators, exception hierarchies, and advanced file streaming operations.
+                        </p>
                     </div>
-                    <div class="mt-4 pt-4 border-t border-white/5">
-                        <a href="https://drive.google.com/file/d/1jix82mm7K5MII-9B_GoBRslsM46nF0wP/view?usp=drive_link" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Download Certificate
+                    <div class="pt-5 mt-5 border-t border-white/10">
+                        <a href="https://drive.google.com/file/d/1jix82mm7K5MII-9B_GoBRslsM46nF0wP/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl glass-pill hover:theme-btn-gradient text-xs font-bold font-mono transition-all flex items-center justify-center gap-2 text-white">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>View Certificate</span>
                         </a>
                     </div>
                 </div>
 
-                <!-- Python Essentials 1 -->
-                <div data-aos="fade-up" data-aos-delay="200" class="glass-panel rounded-2xl p-6 flex flex-col justify-between shadow-xl hover:border-purple-400/30 transition-all duration-300">
+                <!-- Cisco Python 1 -->
+                <div class="glass-card rounded-3xl p-6 flex flex-col justify-between glass-card-hover border-t-2" style="border-top-color: var(--color-secondary);">
                     <div>
-                        <div class="flex justify-between items-start gap-4">
-                            <h3 class="text-lg font-bold text-white">Python Essentials 1</h3>
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20 whitespace-nowrap">Cisco Network Academy</span>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-mono glass-pill theme-text-secondary font-semibold">Cisco NetAcad</span>
+                            <i data-lucide="terminal" class="w-5 h-5 theme-text-secondary"></i>
                         </div>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">Learn fundamental concepts of computer programming and start building coding skills with the Python programming language.</p>
+                        <h3 class="text-lg font-bold text-white leading-snug">Python Essentials 1 (Foundations)</h3>
+                        <p class="text-slate-300 text-xs mt-2.5 leading-relaxed">
+                            Fundamental data structures, boolean logic, looping constructs, memory referencing, and modular library architectures.
+                        </p>
                     </div>
-                    <div class="mt-4 pt-4 border-t border-white/5">
-                        <a href="https://drive.google.com/file/d/1GA2ZB6ELhQ7olLXHJG8DPn6_wlLQ_Jkz/view?usp=drive_link" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Download Certificate
+                    <div class="pt-5 mt-5 border-t border-white/10">
+                        <a href="https://drive.google.com/file/d/1GA2ZB6ELhQ7olLXHJG8DPn6_wlLQ_Jkz/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl glass-pill hover:theme-btn-gradient text-xs font-bold font-mono transition-all flex items-center justify-center gap-2 text-white">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>View Certificate</span>
                         </a>
                     </div>
                 </div>
 
                 <!-- IBM AI -->
-                <div data-aos="fade-up" data-aos-delay="250" class="glass-panel rounded-2xl p-6 flex flex-col justify-between shadow-xl hover:border-emerald-400/30 transition-all duration-300">
+                <div class="glass-card rounded-3xl p-6 flex flex-col justify-between glass-card-hover border-t-2" style="border-top-color: var(--color-primary);">
                     <div>
-                        <div class="flex justify-between items-start gap-4">
-                            <h3 class="text-lg font-bold text-white">Exploring Artificial Intelligence</h3>
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 whitespace-nowrap">IBM Skills Build</span>[cite: 1]
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-mono glass-pill theme-text-primary font-semibold">IBM SkillsBuild</span>
+                            <i data-lucide="brain-circuit" class="w-5 h-5 theme-text-primary"></i>
                         </div>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">Acquired core foundational knowledge regarding Neural Networks, machine learning topologies, and artificial intelligence design methodologies.</p>
+                        <h3 class="text-lg font-bold text-white leading-snug">Exploring Artificial Intelligence</h3>
+                        <p class="text-slate-300 text-xs mt-2.5 leading-relaxed">
+                            Foundational principles behind Neural Networks, natural language processing, predictive classification, and AI ethics.
+                        </p>
                     </div>
-                    <div class="mt-4 pt-4 border-t border-white/5">
-                        <!-- Left blank or point to generic folder/file as no specific link was given for this 6th slot -->
-                        <a href="#" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Download Certificate
-                        </a>
+                    <div class="pt-5 mt-5 border-t border-white/10">
+                        <div class="w-full py-2.5 px-4 rounded-xl glass-pill theme-text-secondary text-xs font-bold font-mono text-center">
+                            IBM SkillsBuild Verified
+                        </div>
                     </div>
                 </div>
 
             </div>
         </section>
 
-        <!-- Extra Info Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Web Bootcamp & Extra Certifications -->
-            <section data-aos="fade-right" class="glass-panel rounded-3xl p-8 shadow-xl">
-                <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-                    <span class="text-cyan-400">⚡</span> Additional Courses
-                </h2>
-                <div class="space-y-4">
-                    <div class="flex gap-3 items-start justify-between">
-                        <div class="flex gap-3 items-start">
-                            <span class="text-cyan-400 mt-1">✦</span>
-                            <div>
-                                <p class="font-bold text-white">Web Development Bootcamp</p>[cite: 1]
-                                <p class="text-sm text-slate-400">Udemy Certification</p>[cite: 1]
-                            </div>
-                        </div>
-                        <a href="#" target="_blank" class="text-xs text-cyan-400 font-semibold hover:underline mt-1">Download</a>
+        <!-- EXTRA CARDS & CAMPUS ENGAGEMENT -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Campus Responsibility -->
+            <div class="glass-card rounded-3xl p-8 flex flex-col justify-between glass-card-hover border-l-4" style="border-left-color: var(--color-primary);">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl glass-pill flex items-center justify-center theme-text-primary mb-6">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-xs font-mono uppercase tracking-wider theme-text-primary">Leadership & Activities</span>
+                    <h3 class="text-2xl font-bold text-white mt-1">Computer Society of India (CSI)</h3>
+                    <p class="text-slate-400 text-xs font-mono mt-0.5">SISTec Student Branch Member</p>
+                    <p class="text-slate-300 text-sm mt-4 leading-relaxed">
+                        Active participant in organizing technical hackathons, algorithmic coding competitions, and peer workshops on web architectures and cyber defense within the institution.
+                    </p>
+                </div>
+                <div class="pt-6 mt-6 border-t border-white/10 flex flex-wrap gap-2">
+                    <span class="px-3 py-1 rounded-lg glass-pill theme-text-primary text-xs font-mono">Teamwork</span>
+                    <span class="px-3 py-1 rounded-lg glass-pill theme-text-secondary text-xs font-mono">Technical Leadership</span>
+                    <span class="px-3 py-1 rounded-lg glass-pill text-slate-300 text-xs font-mono">Problem Solving</span>
+                </div>
+            </div>
+
+            <!-- Professional Strengths & Languages -->
+            <div class="glass-card rounded-3xl p-8 flex flex-col justify-between glass-card-hover border-l-4" style="border-left-color: var(--color-secondary);">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl glass-pill flex items-center justify-center theme-text-secondary mb-6">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-xs font-mono uppercase tracking-wider theme-text-secondary">Interpersonal Competencies</span>
+                    <h3 class="text-2xl font-bold text-white mt-1">Soft Skills & Communication</h3>
+                    <p class="text-slate-400 text-xs font-mono mt-0.5">Global Collaboration Ready</p>
+                    <p class="text-slate-300 text-sm mt-4 leading-relaxed">
+                        Adept at rapid prototyping, debugging under stringent timelines, synthesizing client requirements into engineering deliverables, and collaborating across cross-functional squads.
+                    </p>
+                </div>
+                <div class="pt-6 mt-6 border-t border-white/10 space-y-3">
+                    <div class="text-xs font-mono text-slate-400">SPOKEN LANGUAGES:</div>
+                    <div class="flex gap-2">
+                        <span class="px-3 py-1 rounded-lg glass-pill text-xs font-medium text-white">English (Professional)</span>
+                        <span class="px-3 py-1 rounded-lg glass-pill text-xs font-medium text-white">Hindi (Native)</span>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Roles & Strengths Card -->
-            <section data-aos="fade-left" class="glass-panel rounded-3xl p-8 shadow-xl flex flex-col justify-between">
-                <div>
-                    <h2 class="text-2xl font-bold mb-4 flex items-center gap-3">
-                        <span class="text-cyan-400">🛡️</span> Campus Responsibility
-                    </h2>
-                    <p class="font-bold text-white">Member of CSI Club</p>[cite: 1]
-                    <p class="text-sm text-cyan-400 font-medium">SISTec (Computer Society of India)</p>[cite: 1]
-                </div>
-                <div class="pt-6 mt-6 border-t border-white/5 flex flex-wrap gap-2">
-                    <span class="text-xs px-3 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full font-medium">Problem Solving</span>[cite: 1]
-                    <span class="text-xs px-3 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full font-medium">Teamwork</span>[cite: 1]
-                    <span class="text-xs px-3 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full font-medium">Quick Learner</span>[cite: 1]
-                    <span class="text-xs px-3 py-1 bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 rounded-full font-medium">Hindi</span>[cite: 1]
-                    <span class="text-xs px-3 py-1 bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 rounded-full font-medium">English</span>[cite: 1]
-                </div>
-            </section>
-        </div>
-
-        <!-- Contact / Footer Section -->
-        <section id="contact" data-aos="fade-up" class="text-center py-12 border-t border-white/10">
-            <h2 class="text-3xl font-bold mb-4">Let's Connect</h2>
-            <p class="text-slate-400 max-w-md mx-auto mb-6 text-sm">
-                Interested in collaborating or just want to talk tech? Reach out anytime!
-            </p>
-            <p class="text-xl font-bold text-cyan-400 font-mono tracking-wide mb-2">
-                +91-8458878132
-            </p>
-            <p class="text-sm text-slate-400 font-mono">
-                patelprabhatpatelkurmi6@gmail.com
-            </p>
-            <p class="text-xs text-slate-600 mt-12 font-mono">
-                © 2026 Prabhat Kurmi. Built with Glass Theme & AOS Animations.
-            </p>
         </section>
+
+        <!-- INTERACTIVE CONTACT & QUICK MESSAGE SECTION -->
+        <section id="contact" class="glass-card rounded-3xl p-8 sm:p-12 glass-card-hover relative overflow-hidden">
+            <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full blur-3xl pointer-events-none" style="background-color: var(--color-glow-1);"></div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-xs font-mono theme-text-primary uppercase tracking-widest mb-3">
+                        <i data-lucide="radio" class="w-4 h-4"></i> Establish Link
+                    </div>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Let's Build the Future Together</h2>
+                    <p class="text-slate-300 text-sm sm:text-base mt-4 leading-relaxed">
+                        Open for software engineering internships, technical collaborations, and research initiatives. Reach out directly or dispatch a transmission.
+                    </p>
+
+                    <!-- Contact Details Badges -->
+                    <div class="mt-8 space-y-4">
+                        <div class="flex items-center gap-4 p-4 rounded-2xl glass-pill">
+                            <div class="w-10 h-10 rounded-xl glass-card theme-text-primary flex items-center justify-center">
+                                <i data-lucide="phone-call" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-400 font-mono">PHONE TRANSMISSION</div>
+                                <a href="tel:+918458878132" class="text-base sm:text-lg font-bold text-white hover:theme-text-primary transition-colors font-mono">+91 8458878132</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4 p-4 rounded-2xl glass-pill">
+                            <div class="w-10 h-10 rounded-xl glass-card theme-text-secondary flex items-center justify-center">
+                                <i data-lucide="mail-check" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-400 font-mono">DIRECT INBOX</div>
+                                <a href="mailto:patelprabhatpatelkurmi6@gmail.com" class="text-xs sm:text-sm font-bold text-white hover:theme-text-secondary transition-colors font-mono break-all">patelprabhatpatelkurmi6@gmail.com</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instant Message Form -->
+                <form id="contact-form" class="space-y-4 glass-card p-6 sm:p-8 rounded-2xl">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i data-lucide="message-square" class="w-4 h-4 theme-text-primary"></i> Dispatch Dispatcher
+                    </h3>
+                    
+                    <div>
+                        <label class="block text-xs font-mono text-slate-300 mb-1.5" for="sender-name">YOUR IDENTITY / NAME</label>
+                        <input type="text" id="sender-name" required placeholder="e.g. Alex Mercer" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:theme-border-primary text-sm font-sans transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-slate-300 mb-1.5" for="sender-email">YOUR COMM ADDRESS (EMAIL)</label>
+                        <input type="email" id="sender-email" required placeholder="alex@domain.com" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:theme-border-primary text-sm font-sans transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-slate-300 mb-1.5" for="sender-message">TRANSMISSION CONTENT</label>
+                        <textarea id="sender-message" required rows="4" placeholder="Let's discuss an engineering challenge..." class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:theme-border-primary text-sm font-sans transition-all resize-none"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 rounded-xl text-xs font-bold font-mono tracking-wider theme-btn-gradient transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        <span>SEND MESSAGE // EXECUTE</span>
+                    </button>
+                    
+                    <div id="form-feedback" class="hidden text-center text-xs font-mono p-3 rounded-xl"></div>
+                </form>
+            </div>
+        </section>
+
+        <!-- FOOTER & SYSTEM SIGN-OFF -->
+        <footer class="pt-10 pb-16 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-400 font-mono">
+            <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full animate-pulse" style="background-color: var(--color-primary);"></span>
+                <span>4ROPEX CYBERNETIC ARCHITECTURE v2.5</span>
+            </div>
+            <div>
+                Built for Prabhat Kurmi • Themes: Blue & Mint / Dark Grey & Lime
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#about" class="hover:theme-text-primary transition-colors">Back to Orbit ↑</a>
+            </div>
+        </footer>
 
     </main>
 
-    <!-- AOS Animation Engine Initialization Script -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Interactive Scripts & Layout Adapters -->
     <script>
-        AOS.init({
-            duration: 800, 
-            once: true,    
-            offset: 100    
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // 1. Theme Manager Engine (Blue & Mint <-> Dark Grey & Yellow-Green)
+        const THEMES = {
+            BLUE_MINT: 'blue-mint',
+            DARK_GREY_LIME: 'dark-grey-lime'
+        };
+
+        let currentTheme = localStorage.getItem('portfolio_theme') || THEMES.BLUE_MINT;
+
+        function applyTheme(theme) {
+            const root = document.documentElement;
+            const themeLabel = document.getElementById('theme-label');
+            const mobileThemeLabel = document.getElementById('mobile-theme-label');
+
+            if (theme === THEMES.DARK_GREY_LIME) {
+                root.setAttribute('data-theme', 'dark-grey-lime');
+                if (themeLabel) themeLabel.textContent = 'Dark Grey & Lime';
+                if (mobileThemeLabel) mobileThemeLabel.textContent = 'Dark Grey & Lime';
+            } else {
+                root.removeAttribute('data-theme');
+                if (themeLabel) themeLabel.textContent = 'Blue & Mint';
+                if (mobileThemeLabel) mobileThemeLabel.textContent = 'Blue & Mint';
+            }
+            currentTheme = theme;
+            localStorage.setItem('portfolio_theme', theme);
+        }
+
+        // Toggle Theme Handlers
+        function toggleTheme() {
+            const nextTheme = currentTheme === THEMES.BLUE_MINT ? THEMES.DARK_GREY_LIME : THEMES.BLUE_MINT;
+            applyTheme(nextTheme);
+        }
+
+        document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+        document.getElementById('mobile-theme-toggle')?.addEventListener('click', toggleTheme);
+
+        // Apply on initial load
+        applyTheme(currentTheme);
+
+        // 2. Orientation & Screen Adaptor Engine
+        function updateScreenMatrix() {
+            const width = window.innerWidth;
+            const orientation = window.matchMedia("(orientation: portrait)").matches ? "Portrait" : "Landscape";
+            let deviceType = "Desktop PC";
+
+            if (width < 640) {
+                deviceType = "Mobile";
+            } else if (width <= 1024) {
+                deviceType = "Tablet";
+            }
+
+            const indicator = document.getElementById('screen-detector');
+            if (indicator) {
+                indicator.textContent = `${deviceType} • ${orientation} (${width}px)`;
+            }
+        }
+
+        window.addEventListener('resize', updateScreenMatrix);
+        window.addEventListener('orientationchange', updateScreenMatrix);
+        updateScreenMatrix();
+
+        // 3. Cursor Ambient Glow Tracker
+        const cursorGlow = document.getElementById('cursor-glow');
+        window.addEventListener('mousemove', (e) => {
+            if (cursorGlow) {
+                cursorGlow.style.left = `${e.clientX}px`;
+                cursorGlow.style.top = `${e.clientY}px`;
+            }
         });
+
+        // 4. Mobile Hamburger Navigation Toggle
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const iconMenu = document.getElementById('toggle-icon-menu');
+        const iconClose = document.getElementById('toggle-icon-close');
+
+        if (mobileToggle && mobileMenu) {
+            mobileToggle.addEventListener('click', () => {
+                const isOpen = !mobileMenu.classList.contains('hidden');
+                if (isOpen) {
+                    mobileMenu.classList.add('hidden');
+                    iconMenu.classList.remove('hidden');
+                    iconClose.classList.add('hidden');
+                } else {
+                    mobileMenu.classList.remove('hidden');
+                    iconMenu.classList.add('hidden');
+                    iconClose.classList.remove('hidden');
+                }
+            });
+
+            // Close mobile menu on clicking any link
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    iconMenu.classList.remove('hidden');
+                    iconClose.classList.add('hidden');
+                });
+            });
+        }
+
+        // 5. Horizontal Scroll Track Buttons
+        const horizontalTrack = document.getElementById('horizontal-track');
+        const prevBtn = document.getElementById('scroll-prev-btn');
+        const nextBtn = document.getElementById('scroll-next-btn');
+
+        if (horizontalTrack && prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', () => {
+                horizontalTrack.scrollBy({ left: -450, behavior: 'smooth' });
+            });
+            nextBtn.addEventListener('click', () => {
+                horizontalTrack.scrollBy({ left: 450, behavior: 'smooth' });
+            });
+        }
+
+        // 6. Interactive Filter Controls for Vertical Projects
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('active', 'theme-btn-gradient');
+                    b.classList.add('glass-card', 'text-slate-300');
+                });
+
+                btn.classList.add('active', 'theme-btn-gradient');
+                btn.classList.remove('glass-card', 'text-slate-300');
+
+                const filter = btn.getAttribute('data-filter');
+
+                projectCards.forEach(card => {
+                    const categories = card.getAttribute('data-category') || '';
+                    if (filter === 'all' || categories.includes(filter)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 7. Vanilla Tilt 3D Elevation for desktop/tablets
+        if (typeof VanillaTilt !== 'undefined' && window.innerWidth > 768) {
+            VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
+                max: 8,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.15,
+                scale: 1.01
+            });
+        }
+
+        // 8. Simulated Message Dispatch with In-UI Feedback
+        const contactForm = document.getElementById('contact-form');
+        const formFeedback = document.getElementById('form-feedback');
+
+        if (contactForm && formFeedback) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('sender-name').value;
+
+                formFeedback.className = "text-center text-xs font-mono p-3 rounded-xl glass-card theme-border-primary theme-text-primary block";
+                formFeedback.textContent = `Transmission received, ${name}! Codename 4ROPEX has logged your dispatch.`;
+
+                contactForm.reset();
+
+                setTimeout(() => {
+                    formFeedback.className = "hidden";
+                }, 6000);
+            });
+        }
     </script>
 </body>
 </html>
+
+
